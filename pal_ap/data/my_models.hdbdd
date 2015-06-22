@@ -1,0 +1,73 @@
+namespace p013346trial.hihanaxs.pal_ap.data;
+
+@Schema: '_SYS_BIC'
+context my_models {
+
+@Catalog.tableType: #COLUMN
+
+ENTITY "FCTCUSTOMERORDER"{
+	 key "ORDERID" : Integer NOT NULL;
+	 key "PRODUCTID": Integer NOT NULL;
+	 key "CUSTOMERID": Integer NOT NULL;
+		 "EMPLOYEEID": Integer ;
+		 "PROMOTIONID": Integer ;
+		 "TERRITORYID": Integer ;
+		 "ORDERPERIODID": Integer ;
+		 "REQUIREDPERIODID": Integer ;
+		 "SHIPPEDPERIODID": Integer ;
+		 "SHIPPERID": Integer ;
+		 "UNITPRICE": Decimal(19,4) ;
+		 "QUANTITY": Integer ;
+		 "DISCOUNT": Decimal(19,10) ;
+		 "UNITSALES": Decimal(19,2) ;
+		 "NETSALES": Decimal(19,2) ;
+		 "UNITCOST": Decimal(19,4) ;
+		 "FREIGHT": Double ;
+		 "COST": Decimal(19,4) ;
+		 "QUANTITYORDERED": Integer ;
+		 "DELIVEREDPERIODID": Integer;
+	 };
+	 
+
+view V_AP_DATA as select from FCTCUSTOMERORDER
+	{
+	 "ORDERID",
+	 "PRODUCTID"
+	 };
+	 
+	 
+@Catalog.tableType: #COLUMN	 
+
+entity "AP_PARAMS"{
+	key NAME: String(60);
+	INTARGS: Integer;
+	DOUBLEARGS: Double;
+	STRINGARGS: String(100);
+};	     
+
+@Catalog.tableType: #COLUMN
+entity "AP_RULES"{
+	key "PRERULE": String(500);
+	key "POSTRULE": String(500);
+		"SUPPORT": Double;
+		"CONFIDENCE": Double;
+		"LIFT": Double;	
+	};
+	
+@Catalog.tableType: #COLUMN
+	
+entity "AP_PMML"{
+	key "ID": Integer;
+	"PMMLMODEL":  String(5000);
+	};	
+
+view V_AP_RULES as select from AP_RULES
+{
+	"PRERULE" || ' => ' || "POSTRULE" AS "RULE",
+	ROUND("SUPPORT", 4) AS "SUPPORT", 
+	ROUND("CONFIDENCE", 4) AS "CONFIDENCE", 
+	ROUND("LIFT", 4) AS "LIFT"	
+ 
+	};
+
+};
